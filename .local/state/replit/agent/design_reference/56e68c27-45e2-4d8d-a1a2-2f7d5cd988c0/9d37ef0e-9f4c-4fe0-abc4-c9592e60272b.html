@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Passport Photo Creator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1976D2',
+                        secondary: '#424242',
+                        accent: '#FF5722',
+                        success: '#4CAF50'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- @COMPONENT: Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-primary text-white p-2 rounded-lg">
+                        <i class="fas fa-id-card text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Passport Photo Creator</h1>
+                </div>
+                <div class="text-sm text-gray-600">
+                    Create professional passport photos in minutes
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- @END_COMPONENT: Header -->
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <!-- Left Panel: Upload and Controls -->
+            <div class="space-y-6">
+                
+                <!-- @COMPONENT: ImageUpload -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-upload text-primary mr-2"></i>
+                        Upload Your Photo
+                    </h2>
+                    
+                    <div id="upload-area" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition-colors cursor-pointer" data-implementation="File upload with drag and drop functionality">
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                                <i class="fas fa-cloud-upload-alt text-2xl text-gray-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Drag and drop your photo here</p>
+                                <p class="text-sm text-gray-500">or click to browse files</p>
+                            </div>
+                            <button class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                                Choose File
+                            </button>
+                            <p class="text-xs text-gray-400">Supports JPG, PNG, JPEG up to 10MB</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview uploaded image -->
+                    <div id="uploaded-preview" class="mt-4 hidden" data-mock="true">
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                            <!-- Professional headshot of a person in business attire -->
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=60&h=60&fit=crop&crop=face" alt="Uploaded photo preview" class="w-12 h-12 rounded-lg object-cover" data-mock-image="true" />
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-900" data-bind="uploadedFile.name">photo.jpg</p>
+                                <p class="text-sm text-gray-500" data-bind="uploadedFile.size">2.3 MB</p>
+                            </div>
+                            <button class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ImageUpload -->
+
+                <!-- @COMPONENT: PhotoControls -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                        <i class="fas fa-cog text-primary mr-2"></i>
+                        Photo Settings
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Dimensions -->
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 mb-3 block">Photo Dimensions (mm)</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs text-gray-600 mb-1 block">Width</label>
+                                    <div class="relative">
+                                        <input type="number" value="35" min="10" max="100" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" data-bind="photoSettings.width" />
+                                        <span class="absolute right-3 top-2 text-sm text-gray-500">mm</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-600 mb-1 block">Height</label>
+                                    <div class="relative">
+                                        <input type="number" value="45" min="10" max="150" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" data-bind="photoSettings.height" />
+                                        <span class="absolute right-3 top-2 text-sm text-gray-500">mm</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-2 flex space-x-2">
+                                <button class="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200" data-event="click:setPassportSize">Passport (35×45)</button>
+                                <button class="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200" data-event="click:setVisaSize">Visa (51×51)</button>
+                                <button class="text-xs px-3 py-1 bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200" data-event="click:setIdSize">ID Card (25×35)</button>
+                            </div>
+                        </div>
+
+                        <!-- Quantity Slider -->
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 mb-3 block flex items-center justify-between">
+                                <span>Photos per A4 page</span>
+                                <span class="text-primary font-semibold" data-bind="photoSettings.quantity">8</span>
+                            </label>
+                            <input type="range" min="1" max="20" value="8" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider" data-bind="photoSettings.quantity" data-implementation="Update quantity and recalculate layout" />
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>1</span>
+                                <span>20</span>
+                            </div>
+                        </div>
+
+                        <!-- Layout Options -->
+                        <div>
+                            <label class="text-sm font-medium text-gray-700 mb-3 block">Layout Arrangement</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button class="p-3 border-2 border-primary bg-primary bg-opacity-10 rounded-lg flex flex-col items-center space-y-1 text-primary" data-event="click:setLayout" data-value="auto">
+                                    <i class="fas fa-magic text-lg"></i>
+                                    <span class="text-xs font-medium">Auto</span>
+                                </button>
+                                <button class="p-3 border border-gray-300 rounded-lg flex flex-col items-center space-y-1 text-gray-600 hover:border-primary hover:text-primary" data-event="click:setLayout" data-value="grid">
+                                    <i class="fas fa-th text-lg"></i>
+                                    <span class="text-xs font-medium">Grid</span>
+                                </button>
+                                <button class="p-3 border border-gray-300 rounded-lg flex flex-col items-center space-y-1 text-gray-600 hover:border-primary hover:text-primary" data-event="click:setLayout" data-value="rows">
+                                    <i class="fas fa-bars text-lg"></i>
+                                    <span class="text-xs font-medium">Rows</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: PhotoControls -->
+
+                <!-- @COMPONENT: ActionButtons -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <div class="space-y-3">
+                        <button class="w-full bg-primary text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors flex items-center justify-center space-x-2" data-event="click:generateLayout" data-implementation="Process image and generate A4 layout">
+                            <i class="fas fa-magic"></i>
+                            <span>Generate A4 Layout</span>
+                        </button>
+                        
+                        <button class="w-full bg-success text-white py-3 px-6 rounded-lg font-medium hover:bg-green-600 transition-colors flex items-center justify-center space-x-2 disabled:opacity-50" data-event="click:downloadPDF" disabled data-implementation="Download generated layout as PDF">
+                            <i class="fas fa-download"></i>
+                            <span>Download PDF</span>
+                        </button>
+                        
+                        <div class="text-center">
+                            <button class="text-sm text-gray-600 hover:text-gray-800 underline" data-event="click:reset">
+                                Reset All Settings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ActionButtons -->
+            </div>
+
+            <!-- Right Panel: A4 Preview -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <!-- @COMPONENT: A4Preview -->
+                <h2 class="text-lg font-semibold text-gray-900 mb-4 flex items-center justify-between">
+                    <span class="flex items-center">
+                        <i class="fas fa-file-alt text-primary mr-2"></i>
+                        A4 Preview
+                    </span>
+                    <div class="text-sm text-gray-500">210 × 297 mm</div>
+                </h2>
+
+                <!-- A4 Canvas -->
+                <div class="relative bg-white border-2 border-gray-300 rounded-lg" style="aspect-ratio: 210/297; max-height: 600px;" data-implementation="Canvas or SVG for precise A4 layout rendering">
+                    
+                    <!-- Empty State -->
+                    <div id="empty-preview" class="absolute inset-0 flex items-center justify-center" data-mock="true">
+                        <div class="text-center space-y-4">
+                            <div class="bg-gray-50 rounded-full w-20 h-20 flex items-center justify-center mx-auto">
+                                <i class="fas fa-image text-3xl text-gray-400"></i>
+                            </div>
+                            <div>
+                                <p class="text-gray-600 font-medium">Upload a photo to see preview</p>
+                                <p class="text-sm text-gray-500">Your passport photos will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preview with Photos (Hidden by default, shown after upload) -->
+                    <div id="photos-preview" class="hidden absolute inset-4 grid gap-2" data-mock="true" data-implementation="Dynamic grid based on quantity and dimensions">
+                        <!-- @MAP: Array(8).fill().map((_, index) => ( -->
+                        <!-- Professional headshot for passport photo -->
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <div class="bg-gray-100 border border-gray-300 rounded-sm flex items-center justify-center" style="aspect-ratio: 35/45;">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=140&h=180&fit=crop&crop=face" alt="Passport photo" class="w-full h-full object-cover rounded-sm" data-mock-image="true" />
+                        </div>
+                        <!-- @END_MAP -->
+                    </div>
+
+                    <!-- Page Info -->
+                    <div class="absolute bottom-2 left-2 text-xs text-gray-500 bg-white px-2 py-1 rounded">
+                        Page 1 of 1
+                    </div>
+                    
+                    <!-- Zoom Controls -->
+                    <div class="absolute top-2 right-2 flex space-x-1">
+                        <button class="bg-white border border-gray-300 p-1 rounded text-gray-600 hover:text-gray-800 text-xs" data-event="click:zoomOut">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button class="bg-white border border-gray-300 p-1 rounded text-gray-600 hover:text-gray-800 text-xs" data-event="click:zoomIn">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Preview Stats -->
+                <div class="mt-4 grid grid-cols-3 gap-4 text-center">
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-lg font-semibold text-gray-900" data-bind="previewStats.photosCount">8</div>
+                        <div class="text-xs text-gray-600">Photos</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-lg font-semibold text-gray-900" data-bind="previewStats.dimensions">35×45mm</div>
+                        <div class="text-xs text-gray-600">Size</div>
+                    </div>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="text-lg font-semibold text-gray-900" data-bind="previewStats.efficiency">95%</div>
+                        <div class="text-xs text-gray-600">Paper Usage</div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: A4Preview -->
+            </div>
+        </div>
+
+        <!-- @COMPONENT: InstructionsCard -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                How to Use
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">1</div>
+                    <div>
+                        <h4 class="font-medium text-blue-900">Upload Photo</h4>
+                        <p class="text-sm text-blue-700">Choose a clear, high-quality photo with good lighting</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">2</div>
+                    <div>
+                        <h4 class="font-medium text-blue-900">Set Dimensions</h4>
+                        <p class="text-sm text-blue-700">Adjust width and height according to your requirements</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">3</div>
+                    <div>
+                        <h4 class="font-medium text-blue-900">Choose Quantity</h4>
+                        <p class="text-sm text-blue-700">Select how many photos you want per A4 page</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="bg-blue-600 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-semibold">4</div>
+                    <div>
+                        <h4 class="font-medium text-blue-900">Download</h4>
+                        <p class="text-sm text-blue-700">Generate and download your A4 layout as PDF</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: InstructionsCard -->
+    </div>
+
+    <script>
+        (function() {
+            // TODO: Implement file upload handling with drag and drop
+            // TODO: Implement image processing and resizing functionality
+            // TODO: Implement A4 layout generation with accurate dimensions
+            // TODO: Implement PDF generation and download functionality
+            // TODO: Implement real-time preview updates
+            // TODO: Add loading states and error handling
+            
+            // Demo functionality for UI interactions
+            const uploadArea = document.getElementById('upload-area');
+            const uploadedPreview = document.getElementById('uploaded-preview');
+            const emptyPreview = document.getElementById('empty-preview');
+            const photosPreview = document.getElementById('photos-preview');
+            
+            // Handle upload area click
+            if (uploadArea) {
+                uploadArea.addEventListener('click', function() {
+                    // TODO: Implement actual file selection
+                    console.log('File upload triggered');
+                    
+                    // Demo: Show uploaded preview
+                    if (uploadedPreview) {
+                        uploadedPreview.classList.remove('hidden');
+                    }
+                    
+                    // Demo: Switch to photos preview
+                    setTimeout(() => {
+                        if (emptyPreview) emptyPreview.classList.add('hidden');
+                        if (photosPreview) photosPreview.classList.remove('hidden');
+                    }, 1000);
+                });
+            }
+            
+            // Handle quantity slider
+            const quantitySlider = document.querySelector('input[type="range"]');
+            const quantityDisplay = document.querySelector('[data-bind="photoSettings.quantity"]');
+            
+            if (quantitySlider && quantityDisplay) {
+                quantitySlider.addEventListener('input', function() {
+                    quantityDisplay.textContent = this.value;
+                    // TODO: Implement layout recalculation
+                });
+            }
+            
+            // Handle preset size buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.matches('[data-event^="click:set"]')) {
+                    const widthInput = document.querySelector('input[data-bind="photoSettings.width"]');
+                    const heightInput = document.querySelector('input[data-bind="photoSettings.height"]');
+                    
+                    if (e.target.textContent.includes('Passport')) {
+                        if (widthInput) widthInput.value = '35';
+                        if (heightInput) heightInput.value = '45';
+                    } else if (e.target.textContent.includes('Visa')) {
+                        if (widthInput) widthInput.value = '51';
+                        if (heightInput) heightInput.value = '51';
+                    } else if (e.target.textContent.includes('ID')) {
+                        if (widthInput) widthInput.value = '25';
+                        if (heightInput) heightInput.value = '35';
+                    }
+                    
+                    // TODO: Update preview with new dimensions
+                }
+            });
+        })();
+    </script>
+
+    <style>
+        /* Custom slider styles */
+        .slider {
+            background: linear-gradient(to right, #1976D2 0%, #1976D2 40%, #E5E7EB 40%, #E5E7EB 100%);
+        }
+        
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #1976D2;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .slider::-moz-range-thumb {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #1976D2;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</body>
+</html>
