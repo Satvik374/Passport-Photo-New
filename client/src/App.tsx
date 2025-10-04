@@ -8,6 +8,8 @@ import { useAuth } from "@/hooks/useAuth";
 import NotFound from "@/pages/not-found";
 import PassportGenerator from "@/pages/passport-generator";
 import Landing from "@/pages/landing";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import TermsOfService from "@/pages/terms-of-service";
 import { EmailTest } from "@/components/EmailTest";
 import { LoadingScreen, NavigationLoader } from "@/components/ui/loading-screen";
 
@@ -39,6 +41,8 @@ function Router() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <Switch>
+        <Route path="/privacy-policy" component={PrivacyPolicy} />
+        <Route path="/terms-of-service" component={TermsOfService} />
         {!isAuthenticated ? (
           <>
             <Route path="/" component={Landing} />
