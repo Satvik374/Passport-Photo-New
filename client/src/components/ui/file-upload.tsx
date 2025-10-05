@@ -88,18 +88,18 @@ export function FileUpload({
   if (uploadedFile) {
     return (
       <div className="mt-4">
-        <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-          <FileImage className="h-8 w-8 text-gray-400" />
+        <div className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-slate-900 rounded-lg border dark:border-slate-700">
+          <FileImage className="h-8 w-8 text-gray-400 dark:text-white" />
           <div className="flex-1">
-            <p className="font-medium text-gray-900">{uploadedFile.originalName}</p>
-            <p className="text-sm text-gray-500">{formatFileSize(uploadedFile.size)}</p>
+            <p className="font-medium text-gray-900 dark:text-white">{uploadedFile.originalName}</p>
+            <p className="text-sm text-gray-500 dark:text-slate-300">{formatFileSize(uploadedFile.size)}</p>
           </div>
           {onRemoveFile && (
             <Button
               variant="ghost"
               size="sm"
               onClick={onRemoveFile}
-              className="text-red-500 hover:text-red-700"
+              className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
             >
               <X className="h-4 w-4" />
             </Button>
