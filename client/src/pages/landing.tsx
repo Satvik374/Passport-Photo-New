@@ -9,6 +9,7 @@ import { FaGoogle } from "react-icons/fa";
 import { EmailSignup } from "@/components/auth/EmailSignup.tsx";
 import { EmailLogin } from "@/components/auth/EmailLogin.tsx";
 import { LoadingScreen, PageTransition } from "@/components/ui/loading-screen";
+import { Link } from "wouter";
 
 export default function Landing() {
   const [showAuthDialog, setShowAuthDialog] = useState(false);
@@ -291,6 +292,13 @@ export default function Landing() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-gray-500 dark:text-slate-500">
             <p>&copy; 2025 Passport Photo Creator. Professional photos made simple.</p>
+            <div className="mt-4">
+              <Link href="/privacy-policy">
+                <a data-testid="link-privacy-policy" className="text-primary hover:text-primary/80 underline transition-colors">
+                  Privacy Policy
+                </a>
+              </Link>
+            </div>
           </div>
         </div>
       </footer>
