@@ -9,6 +9,8 @@ import { z } from "zod";
 import path from "path";
 import fs from "fs";
 import { jsPDF } from "jspdf";
+import { SitemapStream, streamToPromise } from "sitemap";
+import { Readable } from "stream";
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -1239,6 +1241,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Save cropped photo error:', error);
       res.status(500).json({ message: 'Failed to save cropped photo' });
+    }
+  });
+
+  // Sitemap route
+  app.get('/sitemap.xml', async (req, res) => {
+    res.header('Content-Type', 'application/xml');
+    
+    try {
+      // Determine the base URL - use production URL if available, otherwise dev URL
+      const baseUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://passport-photo-new.onrender.com'
+        : `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      
+      const smStream = new SitemapStream({ hostname: baseUrl });
+
+      // Define public URLs accessible to all users
+      const links = [
+        { url: '/', changefreq: 'daily', priority: 1.0 },
+        { url: '/privacy-policy', changefreq: 'monthly', priority: 0.5 },
+        { url: '/terms-of-service', changefreq: 'monthly', priority: 0.5 }
+      ];
+
+      // Convert links array to readable stream and pipe to sitemap
+      const data = await streamToPromise(Readable.from(links).pipe(smStream));
+      
+      res.send(data.toString());
+    } catch (error) {
+      console.error('Sitemap generation error:', error);
+      res.status(500).end();
     }
   });
 
