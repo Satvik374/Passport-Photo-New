@@ -675,11 +675,11 @@ export default function PassportGenerator() {
     const a4HeightPx = A4_HEIGHT_MM * MM_TO_PIXELS;
     
     // Scale to fit in container while maintaining aspect ratio
-    const containerWidth = canvas.parentElement?.offsetWidth || 450;
-    const containerHeight = 500; // Fixed height to control aspect ratio
+    const containerWidth = canvas.parentElement?.offsetWidth || 400;
+    const containerHeight = canvas.parentElement?.offsetHeight || 566;
     
     // Calculate scale to fit properly in the available space, then apply zoom
-    const baseScale = Math.min(containerWidth / a4WidthPx, containerHeight / a4HeightPx) * 0.85;
+    const baseScale = Math.min(containerWidth / a4WidthPx, containerHeight / a4HeightPx);
     const scale = baseScale * zoomLevel;
     
     // Set canvas size for crisp rendering
@@ -885,7 +885,7 @@ export default function PassportGenerator() {
                             value={presetName}
                             onChange={(e) => setPresetName(e.target.value)}
                             placeholder="e.g., US Passport, UK Visa Photo"
-                            className="mt-1"
+                            className="mt-1 border-gray-300 dark:border-slate-600"
                           />
                         </div>
                         <div>
@@ -895,11 +895,11 @@ export default function PassportGenerator() {
                             value={presetDescription}
                             onChange={(e) => setPresetDescription(e.target.value)}
                             placeholder="Brief description of this preset..."
-                            className="mt-1"
+                            className="mt-1 border-gray-300 dark:border-slate-600"
                             rows={3}
                           />
                         </div>
-                        <div className="text-sm text-gray-600 p-3 bg-gray-50 rounded">
+                        <div className="text-sm text-gray-600 dark:text-slate-400 p-3 bg-gray-50 dark:bg-slate-800 rounded border border-gray-300 dark:border-slate-600">
                           <strong>Current settings:</strong><br />
                           Size: {photoSettings.width}×{photoSettings.height}mm<br />
                           Quantity: {photoSettings.quantity}<br />
@@ -932,13 +932,13 @@ export default function PassportGenerator() {
                 ) : (
                   <div className="space-y-2 max-h-48 overflow-y-auto">
                     {presets.map((preset: Preset) => (
-                      <div key={preset.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50">
+                      <div key={preset.id} className="flex items-center justify-between p-3 border border-gray-300 dark:border-slate-600 rounded-lg hover:bg-gray-50 dark:hover:bg-slate-800">
                         <div className="flex-1 cursor-pointer" onClick={() => handleLoadPreset(preset)}>
                           <div className="font-medium text-sm">{preset.name}</div>
                           {preset.description && (
-                            <div className="text-xs text-gray-600 mt-1">{preset.description}</div>
+                            <div className="text-xs text-gray-600 dark:text-slate-400 mt-1">{preset.description}</div>
                           )}
-                          <div className="text-xs text-gray-500 mt-1">
+                          <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
                             {preset.settings.width}×{preset.settings.height}mm • {preset.settings.quantity} photos • {preset.borderWidth}mm border
                           </div>
                         </div>
@@ -949,7 +949,7 @@ export default function PassportGenerator() {
                             e.stopPropagation();
                             handleDeletePreset(preset);
                           }}
-                          className="ml-2 h-8 w-8 p-0 text-red-500 hover:text-red-700"
+                          className="ml-2 h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
@@ -984,7 +984,7 @@ export default function PassportGenerator() {
                             min={10}
                             max={100}
                             onChange={(e) => setPhotoSettings(prev => ({ ...prev, width: parseInt(e.target.value) || 35 }))}
-                            className="pr-10 h-12 text-lg"
+                            className="pr-10 h-12 text-lg border-gray-300 dark:border-slate-600"
                           />
                           <span className="absolute right-3 top-3 text-md text-gray-500 dark:text-slate-400">mm</span>
                         </div>
@@ -998,7 +998,7 @@ export default function PassportGenerator() {
                             min={10}
                             max={150}
                             onChange={(e) => setPhotoSettings(prev => ({ ...prev, height: parseInt(e.target.value) || 45 }))}
-                            className="pr-10 h-12 text-lg"
+                            className="pr-10 h-12 text-lg border-gray-300 dark:border-slate-600"
                           />
                           <span className="absolute right-3 top-3 text-md text-gray-500 dark:text-slate-400">mm</span>
                         </div>
@@ -1060,7 +1060,7 @@ export default function PassportGenerator() {
                     
                     {/* Layout Diagram */}
                     {photoSettings.layout !== 'auto' && (
-                      <div className="mt-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg border dark:border-slate-700">
+                      <div className="mt-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg border border-gray-300 dark:border-slate-600">
                         <div className="text-xs text-gray-600 dark:text-slate-400 mb-2">Position Preview:</div>
                         <div className="w-full h-16 border-2 border-gray-300 dark:border-slate-600 rounded relative bg-white dark:bg-slate-900">
                           <div 
@@ -1175,7 +1175,7 @@ export default function PassportGenerator() {
                       Preview Settings
                     </Label>
                     
-                    <div className="flex items-center justify-between p-3 border rounded-lg dark:border-slate-600">
+                    <div className="flex items-center justify-between p-3 border border-gray-300 dark:border-slate-600 rounded-lg">
                       <div className="flex-1">
                         <Label className="text-sm font-medium">Auto Preview</Label>
                         <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">Automatically update preview when settings change</p>
@@ -1284,7 +1284,7 @@ export default function PassportGenerator() {
               </div>
 
               {/* A4 Canvas */}
-              <div className="relative bg-white dark:bg-slate-900 rounded-lg shadow-inner dark:shadow-slate-950/50 w-[400px] h-[566px] mx-auto overflow-auto border dark:border-slate-700/50">
+              <div className="relative bg-white dark:bg-slate-900 rounded-lg shadow-inner dark:shadow-slate-950/50 w-[400px] h-[566px] mx-auto overflow-hidden border border-gray-300 dark:border-slate-600">
                 
                 {/* Empty State */}
                 {!layoutResult && (
@@ -1303,24 +1303,10 @@ export default function PassportGenerator() {
 
                 {/* Canvas Preview */}
                 {layoutResult && (
-                  <div 
-                    className="flex items-center justify-center w-full h-full" 
-                    style={{ 
-                      width: '400px', 
-                      height: '566px'
-                    }}
-                  >
-                    <canvas
-                      ref={canvasRef}
-                      className="rounded-sm"
-                      style={{
-                        width: '400px',
-                        height: '566px',
-                        maxWidth: '400px',
-                        maxHeight: '566px'
-                      }}
-                    />
-                  </div>
+                  <canvas
+                    ref={canvasRef}
+                    className="rounded-sm w-full h-full"
+                  />
                 )}
 
                 {/* Page Info */}
@@ -1334,15 +1320,15 @@ export default function PassportGenerator() {
               {/* Preview Stats */}
               {layoutResult && (
                 <div className="mt-4 grid grid-cols-3 gap-4 text-center">
-                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border dark:border-slate-700/50">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border border-gray-300 dark:border-slate-600">
                     <div className="text-lg font-semibold text-gray-900 dark:text-slate-100">{photoSettings.quantity}</div>
                     <div className="text-xs text-gray-600 dark:text-slate-400">Photos</div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border dark:border-slate-700/50">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border border-gray-300 dark:border-slate-600">
                     <div className="text-lg font-semibold text-gray-900 dark:text-slate-100">{photoSettings.width}×{photoSettings.height}mm</div>
                     <div className="text-xs text-gray-600 dark:text-slate-400">Size</div>
                   </div>
-                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border dark:border-slate-700/50">
+                  <div className="bg-gray-50 dark:bg-slate-800 rounded-lg p-3 border border-gray-300 dark:border-slate-600">
                     <div className="text-lg font-semibold text-gray-900 dark:text-slate-100">{Math.round(layoutResult.pageUtilization * 100)}%</div>
                     <div className="text-xs text-gray-600 dark:text-slate-400">Paper Usage</div>
                   </div>
@@ -1622,7 +1608,7 @@ export default function PassportGenerator() {
               
               <div className="space-y-6">
                 {/* Background Removal */}
-                <div className="flex items-center justify-between p-4 border rounded-lg dark:border-slate-600">
+                <div className="flex items-center justify-between p-4 border border-gray-300 dark:border-slate-600 rounded-lg">
                   <div>
                     <Label htmlFor="removeBackground" className="text-sm font-medium">AI Background Removal</Label>
                     <p className="text-xs text-gray-600 dark:text-slate-400 mt-1">
@@ -1658,7 +1644,7 @@ export default function PassportGenerator() {
                       type="text"
                       value={backgroundSettings.backgroundColor}
                       onChange={(e) => setBackgroundSettings(prev => ({ ...prev, backgroundColor: e.target.value }))}
-                      className="flex-1 font-mono text-sm"
+                      className="flex-1 font-mono text-sm border-gray-300 dark:border-slate-600"
                       placeholder="#ffffff"
                     />
                   </div>
