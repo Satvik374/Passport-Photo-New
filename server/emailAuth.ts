@@ -114,31 +114,24 @@ export class EmailAuthService {
       }
 
       // Check if there's a pending registration
-      const existingPending = await storage.getPendingRegistration(email, ''); // Just to check if email exists in pending
+      const existingPending = await storage.getPendingRegistrationByEmail(email);
       if (!existingPending) {
-        // If no pending registration found, try with a dummy code to get any matching record
-        const [pendingReg] = await db.select().from(pendingRegistrations).where(eq(pendingRegistrations.email, email));
-        if (!pendingReg) {
-          return { success: false, message: 'No registration found for this email. Please sign up first.' };
-        }
+        return { success: false, message: 'No registration found for this email. Please sign up first.' };
       }
 
       // Generate new verification code and update the pending registration
       const verificationCode = EmailService.generateVerificationCode();
       const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
-      // Get the existing pending registration to preserve other data
-      const [existingReg] = await db.select().from(pendingRegistrations).where(eq(pendingRegistrations.email, email));
-      if (existingReg) {
-        await storage.savePendingRegistration({
-          email: existingReg.email,
-          firstName: existingReg.firstName,
-          lastName: existingReg.lastName,
-          passwordHash: existingReg.passwordHash,
-          verificationCode,
-          expiresAt,
-        });
-      }
+      // Update the pending registration with new code
+      await storage.savePendingRegistration({
+        email: existingPending.email,
+        firstName: existingPending.firstName,
+        lastName: existingPending.lastName,
+        passwordHash: existingPending.passwordHash,
+        verificationCode,
+        expiresAt,
+      });
 
       // Send verification email
       const emailSent = await EmailService.sendVerificationEmail(email, verificationCode);

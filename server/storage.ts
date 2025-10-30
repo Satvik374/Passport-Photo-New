@@ -18,6 +18,7 @@ export interface IStorage {
   // Pending registration operations
   savePendingRegistration(registration: InsertPendingRegistration): Promise<PendingRegistration>;
   getPendingRegistration(email: string, code: string): Promise<PendingRegistration | undefined>;
+  getPendingRegistrationByEmail(email: string): Promise<PendingRegistration | undefined>;
   deletePendingRegistration(email: string): Promise<void>;
   deleteExpiredPendingRegistrations(): Promise<void>;
   
@@ -56,13 +57,15 @@ export class MemStorage implements IStorage {
 
   constructor() {
     // Run cleanup every 5 minutes
-    setInterval(() => this.cleanup(), 5 * 60 * 1000);
+    setInterval(() => {
+      this.cleanup().catch(err => console.error('Cleanup error:', err));
+    }, 5 * 60 * 1000);
   }
 
-  private cleanup() {
+  private async cleanup() {
     // Remove expired verifications
-    this.deleteExpiredVerifications();
-    this.deleteExpiredPendingRegistrations();
+    await this.deleteExpiredVerifications();
+    await this.deleteExpiredPendingRegistrations();
 
     // Remove old images if over limit
     if (this.images.size > this.MAX_IMAGES) {
@@ -227,6 +230,16 @@ export class MemStorage implements IStorage {
         registration.verificationCode === code &&
         registration.expiresAt > now
       ) {
+        return registration;
+      }
+    }
+    return undefined;
+  }
+
+  async getPendingRegistrationByEmail(email: string): Promise<PendingRegistration | undefined> {
+    const now = new Date();
+    for (const registration of this.pendingRegistrationsList.values()) {
+      if (registration.email === email && registration.expiresAt > now) {
         return registration;
       }
     }

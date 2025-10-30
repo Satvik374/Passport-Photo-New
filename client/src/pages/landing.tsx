@@ -293,10 +293,12 @@ export default function Landing() {
           <div className="text-center text-gray-500 dark:text-slate-500">
             <p>&copy; 2025 Passport Photo Creator. Professional photos made simple.</p>
             <div className="mt-4">
-              <Link href="/privacy-policy">
-                <a data-testid="link-privacy-policy" className="text-primary hover:text-primary/80 underline transition-colors">
-                  Privacy Policy
-                </a>
+              <Link 
+                href="/privacy-policy" 
+                data-testid="link-privacy-policy" 
+                className="text-primary hover:text-primary/80 underline transition-colors"
+              >
+                Privacy Policy
               </Link>
             </div>
           </div>
