@@ -3,7 +3,6 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeSecrets, autoSetupSecrets } from "./initializeSecrets";
-import { ensureDatabaseSchema } from "./dbSetup";
 
 // Initialize secrets before starting the application
 console.log('🔧 Starting Passport Photo Generator...');
@@ -22,9 +21,6 @@ if (!secretsValid) {
   console.log('💡 Please add the required secrets and restart the application');
   process.exit(1);
 }
-
-// Ensure database schema is set up
-await ensureDatabaseSchema();
 
 const app = express();
 app.use(express.json());

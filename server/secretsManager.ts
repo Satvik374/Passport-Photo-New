@@ -13,12 +13,6 @@ export interface SecretConfig {
 // All required secrets for the application
 export const REQUIRED_SECRETS: SecretConfig[] = [
   {
-    key: 'DATABASE_URL',
-    description: 'PostgreSQL database connection URL',
-    required: true,
-    isUrl: true
-  },
-  {
     key: 'REMOVE_BG_API_KEY_1',
     description: 'Remove.bg API key #1 for background removal',
     required: false

@@ -2,7 +2,6 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import session from "express-session";
 import type { Express, RequestHandler } from "express";
-import connectPg from "connect-pg-simple";
 import { storage } from "./storage";
 import { secretsManager } from "./secretsManager";
 
@@ -28,46 +27,13 @@ if (hasGoogleAuth) {
 export function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
   
-  // Get DATABASE_URL from environment or secrets manager
-  let databaseUrl = process.env.DATABASE_URL;
-  if (!databaseUrl) {
-    databaseUrl = secretsManager.getSecret('DATABASE_URL');
-  }
-
-  if (databaseUrl) {
-    try {
-      const pgStore = connectPg(session);
-      const sessionStore = new pgStore({
-        conString: databaseUrl,
-        createTableIfMissing: true,
-        ttl: sessionTtl,
-        tableName: "sessions",
-      });
-      return session({
-        secret: secretsManager.getSecret('SESSION_SECRET') || process.env.SESSION_SECRET || 'fallback-secret-key',
-        store: sessionStore,
-        resave: false,
-        saveUninitialized: false,
-        cookie: {
-          httpOnly: true,
-          secure: false, // Force non-secure cookies for development
-          maxAge: sessionTtl,
-          sameSite: 'lax',
-        },
-      });
-    } catch (error) {
-      console.log('⚠️  PostgreSQL session store failed, falling back to memory store');
-    }
-  }
-
-  // Fallback to memory store when database is not available
   return session({
     secret: secretsManager.getSecret('SESSION_SECRET') || process.env.SESSION_SECRET || 'fallback-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Force non-secure cookies for development
+      secure: false,
       maxAge: sessionTtl,
       sameSite: 'lax',
     },
