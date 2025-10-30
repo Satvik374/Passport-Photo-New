@@ -2,9 +2,6 @@ import bcrypt from 'bcryptjs';
 import { randomUUID } from 'crypto';
 import { storage } from './storage';
 import { EmailService } from './emailService';
-import { db } from './db';
-import { pendingRegistrations } from '@shared/schema';
-import { eq } from 'drizzle-orm';
 import type { EmailSignup, EmailLogin, User } from '@shared/schema';
 
 export class EmailAuthService {
